@@ -87,7 +87,7 @@ int main(void)
 	// Armamos y enviamos el paquete
 	t_paquete* paquete_a_enviar = crear_paquete();
 	paquete(conexion);
-	enviar_paquete(conexion, paquete_a_enviar);
+	enviar_paquete(paquete_a_enviar, conexion);
 	eliminar_paquete(paquete_a_enviar);
 
 	terminar_programa(conexion, logger, config);
