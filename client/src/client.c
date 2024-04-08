@@ -70,10 +70,6 @@ int main(void)
 	// Loggeamos el valor de config
 	log_info(logger, "El valor de config es: %s", valor);
 
-	/* ---------------- LEER DE CONSOLA ---------------- */
-
-	leer_consola(logger);
-
 
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
@@ -81,19 +77,18 @@ int main(void)
 
 	// Creamos una conexión hacia el servidor
 	conexion = crear_conexion(ip, puerto);
+	log_info(logger, "Conexión creada");
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
 	enviar_mensaje(valor, conexion);
-	// Armamos y enviamos el paquete
-	t_paquete* paquete_a_enviar = crear_paquete();
-	paquete(conexion);
-	enviar_paquete(paquete_a_enviar, conexion);
-	eliminar_paquete(paquete_a_enviar);
+	log_info(logger, "Handshaking enviado");
 
+	// Armamos y enviamos el paquete;
+	paquete(conexion);
+
+	log_info(logger, "Proceso terminado correctamente. Se termina el programa.");
 	terminar_programa(conexion, logger, config);
 
-	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
-	// Proximamente
 }
 
 t_log* iniciar_logger(void)
@@ -126,7 +121,7 @@ void leer_consola(t_log* logger)
 	leido = readline("> ");
 	// El resto, las vamos leyendo y logueando hasta recibir un string vacío
 	while (strcmp(leido, "") != 0){
-		log_info(logger, leido);
+		log_info(logger, "El mensaje leído fue: '%s' " , leido);
 		leido = readline("> ");
 	}
 	free(leido);
@@ -134,15 +129,23 @@ void leer_consola(t_log* logger)
 
 void paquete(int conexion)
 {
-	// Ahora toca lo divertido!
 	char* leido;
 	t_paquete* paquete;
 	paquete = crear_paquete();
-	// Leemos y esta vez agregamos las lineas al paquete
 	t_log* loggerPrueba = log_create("paquete.log", "Metiendo cosas al log", true, LOG_LEVEL_INFO);
+	
+	// Leemos y esta vez agregamos las lineas al paquete
 	leido = readline("> ");
-	agregar_a_paquete(paquete, leido, sizeof(leido) + 1);
-	log_info(loggerPrueba, "agregado al paquete");
+	while (strcmp(leido, "") != 0){
+			log_info(loggerPrueba, "El mensaje leído fue: '%s'. Se va a agregar al paquete" , leido);
+		agregar_a_paquete(paquete, leido, sizeof(leido) + 1);
+			log_info(loggerPrueba, "Agregado al paquete satisfactoriamente.");
+		leido = readline("> ");
+	}
+		log_info(loggerPrueba, "Se enviara el paquete.");
+	enviar_paquete(paquete, conexion);
+		log_info(loggerPrueba, "Paquete enviado satisfactoriamente.");
+
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
 	free(leido);
 	log_destroy(loggerPrueba);
