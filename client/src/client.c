@@ -86,6 +86,9 @@ int main(void)
 	// Armamos y enviamos el paquete;
 	paquete(conexion);
 
+	getchar();
+	getchar();
+	
 	log_info(logger, "Proceso terminado correctamente. Se termina el programa.");
 	terminar_programa(conexion, logger, config);
 
