@@ -141,7 +141,7 @@ void paquete(int conexion)
 	leido = readline("> ");
 	while (strcmp(leido, "") != 0){
 			log_info(loggerPrueba, "El mensaje leído fue: '%s'. Se va a agregar al paquete" , leido);
-		agregar_a_paquete(paquete, leido, sizeof(leido) + 1);
+		agregar_a_paquete(paquete, leido, strlen(leido) + 1);
 			log_info(loggerPrueba, "Agregado al paquete satisfactoriamente.");
 		leido = readline("> ");
 	}
